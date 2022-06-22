@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, firstValueFrom, lastValueFrom, Observable, of, switchMap } from 'rxjs';
 
 @Component({
     selector: 'register-form',
@@ -25,44 +24,28 @@ export class RegisterFormComponent implements OnInit {
 
     }
 
-    checkPasswordStrength() {
-        const isStrong$ = this.formRegister.valueChanges
-            .pipe(
-                switchMap(input => {
-                    const inputPassword = input.password as string
-                    const patternPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/
-                    return of(patternPassword.test(inputPassword))
-                })
-        )
-        return lastValueFrom(isStrong$)
+    onSubmit() {
+        console.log(this.formRegister.controls['email'].errors)
     }
 
-    async onSubmit() {
+    private checkPasswordStrength(password: string) {
+        const uppercase = /([A-Z]+){1,}/g
+        const lowercase = /([a-z]+){1,}/g
+        const number = /([0-9]+){1,}/g
+        const specialCharacter = /([!@#$%^&*]){1,}/g
+        const length = password.length >= 8
 
-        const formStatus$ = this.formRegister.statusChanges.subscribe(status => {
-            if (status !== 'VALID') {
-                if (this.formRegister.valid) {
-                    const isStrong = this.checkPasswordStrength().then(
-                        isStrong => {
-                        if (isStrong) {
-                            alert('Senha válida')
-                        } else {
-                            alert('Senha inválida')
-                        }}
-                    )
-                }
-            }
-        })
-        // if (this.formRegister.valid) {
+        if (!uppercase.test(password))
+            return false
+        if (!lowercase.test(password))
+            return false
+        if (!number.test(password))
+            return false
+        if (!specialCharacter.test(password))
+            return false
+        if (!length)
+            return false
 
-            // const passwordMatchs = this.formRegister.value.password === this.formRegister.value.confirmPassword
-            // if (!passwordMatchs) {
-            //     throw new Error('Senhas não são iguais')
-            // }
-        // } else {
-        //     alert('Preencha os campos obrigatórios')
-        // }
+        return true
     }
-
-
 }
