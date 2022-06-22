@@ -1,0 +1,69 @@
+<section class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="../assets/images/sign-up-image.png" class="img-fluid" alt="Sign up image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form [formGroup]="formRegister" (ngSubmit)="onSubmit()">
+                    <h2 class="text-center py-3">SIGN UP</h2>
+                    <!-- Name input -->
+                    <div class="form-outline mb-3">
+                        <label class="form-label" for="inputName">Name</label>
+                        <input type="text"
+                            id="inputName"
+                            class="form-control form-control-lg"
+                            placeholder="Name"
+                            formControlName="name" />
+                    </div>
+
+                    <!-- Username input -->
+                    <div class="form-outline mb-3">
+                        <label class="form-label" for="inputUsername">Username</label>
+                        <input type="text"
+                            id="inputUsername"
+                            class="form-control form-control-lg"
+                            placeholder="Username"
+                            formControlName="username" />
+                    </div>
+
+                    <!-- Email input -->
+                    <div class="form-outline mb-3">
+                        <label class="form-label" for="inputEmail">Email</label>
+                        <input type="email"
+                            id="inputEmail"
+                            class="form-control form-control-lg"
+                            placeholder="Email"
+                            formControlName="email" />
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-3">
+                        <label class="form-label" for="inputPassword">Password</label>
+                        <input type="password"
+                            id="inputPassword"
+                            class="form-control form-control-lg"
+                            placeholder="Password"
+                            formControlName="password"
+                            />
+                    </div>
+
+                    <!-- Confirm password input -->
+                    <div class="form-outline mb-3">
+                        <label class="form-label" for="inputconfirmPassword">Confirm password</label>
+                        <input type="password"
+                            id="inputconfirmPassword"
+                            class="form-control form-control-lg"
+                            placeholder="Confirm password"
+                            formControlName="confirmPassword" />
+                    </div>
+
+                    <div class="text-center text-lg-start mt-3 pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">SIGN UP</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

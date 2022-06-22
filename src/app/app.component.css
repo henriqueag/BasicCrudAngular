@@ -1,0 +1,8 @@
+.link-secondary {
+    color: #363636;
+    text-decoration: none;
+}
+
+.link-secondary:hover {
+    text-decoration: underline;
+}
