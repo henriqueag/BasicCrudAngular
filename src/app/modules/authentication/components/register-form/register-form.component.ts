@@ -1,6 +1,5 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
 @Component({
     selector: 'register-form',
     templateUrl: './register-form.component.html',
@@ -8,24 +7,56 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class RegisterFormComponent implements OnInit {
 
+    @ViewChild('inputName') inputName: ElementRef
+    @ViewChild('validateName', { static: false }) validateName: ElementRef
+
+    @ViewChild('inputUsername') inputUsername: ElementRef
+    @ViewChild('validateUsername', { static: false }) validateUsername: ElementRef
+
+    @ViewChild('inputEmail') inputEmail: ElementRef
+    @ViewChild('validateEmail', { static: false }) validateEmail: ElementRef
+
     formRegister: FormGroup
 
-    constructor(private _builder: FormBuilder) { }
+    constructor(private _builder: FormBuilder,
+        private _renderer: Renderer2) { }
 
     ngOnInit(): void {
-
         this.formRegister = this._builder.group({
             name: ['', [Validators.required, Validators.minLength(4)]],
             username: ['', [Validators.required, Validators.minLength(4)]],
             email: ['', [Validators.required, Validators.minLength(4), Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(4)]],
-            confirmPassword: ['', [Validators.required, Validators.minLength(4)]]
+            password: [''],
+            confirmPassword: ['']
         })
-
     }
 
     onSubmit() {
-        console.log(this.formRegister.controls['email'].errors)
+        console.log(this.formRegister);
+
+        // const required = this.formRegister.controls['name'].hasError('required')
+        // const min = this.formRegister.controls['name'].hasError('minlength')
+        // console.log(`required = ${required}`)
+        // console.log(`minLen = ${min}`)
+    }
+
+    validaCampos(formControlName: string, templateRef: string) {
+        if (templateRef == 'inputName') {
+            const required = this.formRegister.controls[formControlName].hasError('required')
+            const minlength = this.formRegister.controls[formControlName].hasError('minlength')
+            if (required) {
+                this.removeErrorMessage(this.inputName)
+                this.setErrorMessage('Name is required', this.inputName, this.validateName)
+                return
+            }
+            if (minlength) {
+                this.removeErrorMessage(this.inputName)
+                this.setErrorMessage('Minimum size 4 characters', this.inputName, this.validateName)
+                return
+            }
+            this.removeErrorMessage(this.inputName)
+            return
+        }
     }
 
     private checkPasswordStrength(password: string) {
@@ -47,5 +78,30 @@ export class RegisterFormComponent implements OnInit {
             return false
 
         return true
+    }
+
+    private setErrorMessage(message: string, input: ElementRef, parentNode: ElementRef) {
+
+        if (document.querySelector('#message-error')) {
+            return
+        }
+
+        const newElement = this._renderer.createElement('div')
+        const text = this._renderer.createText(message)
+
+        this._renderer.addClass(newElement, 'invalid-feedback')
+        this._renderer.setStyle(newElement, 'display', 'block')
+        this._renderer.setAttribute(newElement, 'id', 'message-error')
+
+        this._renderer.appendChild(newElement, text)
+
+        this._renderer.addClass(input.nativeElement, 'is-invalid')
+        this._renderer.appendChild(parentNode.nativeElement, newElement)
+    }
+
+    private removeErrorMessage(input: ElementRef) {
+        const oldElement = document.querySelector('#message-error')
+        this._renderer.removeClass(input.nativeElement, 'is-invalid')
+        oldElement?.remove()
     }
 }
