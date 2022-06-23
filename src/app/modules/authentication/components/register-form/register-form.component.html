@@ -5,17 +5,30 @@
                 <img src="../assets/images/sign-up-image.png" class="img-fluid" alt="Sign up image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form [formGroup]="formRegister" (ngSubmit)="onSubmit()">
+                <form [formGroup]="formRegister" (keydown)="cliquei()" (ngSubmit)="onSubmit()">
                     <h2 class="text-center py-3">SIGN UP</h2>
 
                     <input-validate
                         type="text"
                         label="Name"
                         htmlId="inputName"
+                        cssLabelClass="form-label"
+                        [isDisabled]="false"
                         htmlClass="form-control form-control-lg"
                         placeholder="Name"
-                        controlName="name"
-                        (formGroup)="formRegister"
+                        formControlName="name"
+                        >
+                    </input-validate>
+
+                    <input-validate
+                        type="text"
+                        label="Email"
+                        htmlId="inputEmail"
+                        cssLabelClass="form-label"
+                        [isDisabled]="false"
+                        htmlClass="form-control form-control-lg"
+                        placeholder="Email"
+                        formControlName="email"
                         >
                     </input-validate>
                     <!-- Name input -->

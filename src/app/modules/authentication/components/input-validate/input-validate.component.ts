@@ -1,13 +1,19 @@
-import { Component, Input, ViewChild, ElementRef, Renderer2, EventEmitter, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { Component, Input, ViewChild, ElementRef, Renderer2, EventEmitter, Output, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+const INPUT_FIELD_VALUE_ACCESSOR: any = {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => InputValidateComponent),
+    multi: true
+};
 
 @Component({
     selector: 'input-validate',
     templateUrl: './input-validate.component.html',
-    styleUrls: ['./input-validate.component.css']
+    styleUrls: ['./input-validate.component.css'],
+    providers: [INPUT_FIELD_VALUE_ACCESSOR]
 })
-export class InputValidateComponent {
+export class InputValidateComponent implements ControlValueAccessor {
 
     @ViewChild('genericInput') genericInput: ElementRef
     @ViewChild('validateFieldContainer') validateFieldContainer: ElementRef
@@ -17,13 +23,43 @@ export class InputValidateComponent {
     @Input() htmlId: string
     @Input() htmlClass: string
     @Input() placeholder: string
-    @Input() controlName: string
+    @Input() cssLabelClass: string
+    @Input() isDisabled: boolean
 
     constructor(private _renderer: Renderer2) { }
 
-    ngOnInit() { }
+    private _innerValue: any;
+
+    get value() {
+        return this._innerValue;
+    }
+
+    set value(value: any) {
+        if (value !== this._innerValue) {
+            this._innerValue = value;
+            this.onChangeCb(value);
+        }
+    }
+
+    onChangeCb: (_: any) => void = () => { };
+    onTouchedCb: (_: any) => void = () => { };
+
+    writeValue(value: any) {
+        this.value = value
+    }
+    registerOnChange(fn: any) {
+        this.onChangeCb = fn
+    }
+    registerOnTouched(fn: any) {
+        this.onTouchedCb = fn
+    }
+
+    setDisabledState?(isDisabled: boolean): void {
+        this.isDisabled = isDisabled;
+    }
 
     validateFields() {
+
         // const required = this.formGroup.controls[this.controlName].hasError('required')
         // const minlength = this.formGroup.controls[this.controlName].hasError('minlength')
 

@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { GetbehaviorService } from '../input-validate/getbehavior.service';
 @Component({
     selector: 'register-form',
     templateUrl: './register-form.component.html',
@@ -19,7 +20,9 @@ export class RegisterFormComponent implements OnInit {
     formRegister: FormGroup
 
     constructor(private _builder: FormBuilder,
-        private _renderer: Renderer2) { }
+        private _renderer: Renderer2,
+        private _behaviorService: GetbehaviorService
+    ) { }
 
     ngOnInit(): void {
         this.formRegister = this._builder.group({
@@ -32,12 +35,17 @@ export class RegisterFormComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.formRegister);
+        console.log(this.formRegister.controls);
 
         // const required = this.formRegister.controls['name'].hasError('required')
         // const min = this.formRegister.controls['name'].hasError('minlength')
         // console.log(`required = ${required}`)
         // console.log(`minLen = ${min}`)
+    }
+
+    cliquei() {
+        console.log('sai do input');
+
     }
 
     validaCampos(formControlName: string, templateRef: string) {

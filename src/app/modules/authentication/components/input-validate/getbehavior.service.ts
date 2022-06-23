@@ -14,4 +14,8 @@ export class GetbehaviorService {
     setBehavior(value: any) {
         this.input.next(value)
     }
+
+    getBehavior() {
+        return this.input.asObservable()
+    }
 }
